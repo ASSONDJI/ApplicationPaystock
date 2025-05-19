@@ -9,8 +9,8 @@ public class Custumer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id_client;
     private String nom_client;
-    private String prenom_client;
-    private String add_client;
+    public String prenom_client;
+    public String add_client;
 
 
     public long getId_client() {
@@ -36,12 +36,19 @@ public class Custumer {
     public void setPrenom_client(String prenom_client) {
         this.prenom_client = prenom_client;
     }
-
     public String getAdd_client() {
         return add_client;
     }
 
     public void setAdd_client(String add_client) {
         this.add_client = add_client;
+    }
+
+    public String add_client() {
+        return "";
+    }
+
+    public String prenom_client() {
+        return "";
     }
 }

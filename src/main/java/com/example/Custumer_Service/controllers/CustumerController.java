@@ -1,7 +1,9 @@
+
 package com.example.Custumer_Service.controllers;
 
 import com.example.Custumer_Service.Services.CustumerService;
-import com.example.Custumer_Service.models.Custumer;
+import com.example.Custumer_Service.dto.CustumerRequestDto;
+import com.example.Custumer_Service.dto.CustumerResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,23 +19,23 @@ public class CustumerController {
     private CustumerService custumerService;
 
     @GetMapping
-    public List<Custumer> getAllCustumers() {
+    public List<CustumerResponseDto> getAllCustumers() {
         return custumerService.getAllCustumers();
     }
 
     @GetMapping("/{id}")
-    public Optional<Custumer> getCustumerById(@PathVariable Long id) {
-        return custumerService.getCustumerById(id);
+    public Optional<CustumerResponseDto> getCustumerById(@PathVariable Long id) {
+        return Optional.ofNullable(custumerService.getCustumerById(id));
     }
 
     @PostMapping
-    public Custumer createCustomer(@RequestBody Custumer custumer) {
-        return custumerService.createCustumer(custumer);
+    public CustumerResponseDto createCustomer(@RequestBody CustumerRequestDto dto) {
+        return custumerService.createCustumer(dto);
     }
 
     @PutMapping("/{id}")
-    public Custumer updateCustomer(@PathVariable Long id, @RequestBody Custumer custumer) {
-        return custumerService.updateCustumer(id, custumer);
+    public CustumerResponseDto updateCustomer(@PathVariable Long id, @RequestBody CustumerRequestDto dto) {
+        return custumerService.updateCustumer(id, dto);
     }
 
     @DeleteMapping("/{id}")
