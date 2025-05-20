@@ -17,14 +17,14 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, "Ressource introuvable", ex.getMessage());
     }
 
-    // 2. Argument de mauvaise forme (ex : id dans l'URL)
+    
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         String message = "L'identifiant fourni n'est pas valide : " + ex.getValue();
         return buildResponse(HttpStatus.BAD_REQUEST, "Type d'argument invalide", message);
     }
 
-    // 3. Erreurs de validation DTO
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationErrors(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
