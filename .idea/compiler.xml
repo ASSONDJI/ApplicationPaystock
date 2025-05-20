@@ -15,19 +15,6 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
         </processorPath>
-      </profile>
-    </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Bill-Service" target="17" />
-      <module name="Category-Service" target="17" />
-      <module name="Custumer-Service" target="17" />
-      <module name="Eureka-Serveur" target="17" />
-      <module name="Gateway-Server" target="17" />
-      <module name="Notification-Service" target="17" />
-      <module name="Order-Service" target="17" />
-      <module name="Payment-Service" target="17" />
-      <module name="Product-Service" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
