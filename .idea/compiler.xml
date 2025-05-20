@@ -6,23 +6,23 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Order-Service" />
+        <module name="Payment-Service" />
         <module name="Eureka-Serveur" />
         <module name="Notification-Service" />
+        <module name="Bill-Service" />
+        <module name="Custumer-Service" />
         <module name="Gateway-Server" />
+        <module name="Product-Service" />
       </profile>
-      <profile name="Annotation profile for Custumer-Service" enabled="true">
+      <profile name="Annotation profile for Category-Service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="Custumer-Service" />
-        <module name="Order-Service" />
-        <module name="Bill-Service" />
         <module name="Category-Service" />
-        <module name="Product-Service" />
-        <module name="Payment-Service" />
       </profile>
     </annotationProcessing>
   </component>
