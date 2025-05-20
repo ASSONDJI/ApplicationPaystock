@@ -2,19 +2,17 @@ package com.example.Product_Service.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import com.example.Product_Service.dto.ProductRequestDto;
+import com.example.Product_Service.dto.ProductResponseDto;
 
-import com.example.Product_Service.model.ProductModel;
-
-@Service
 
 public interface ProductService {
 
-    public ProductModel saveProduct(ProductModel productModel);
+    public ProductResponseDto saveProduct(ProductRequestDto productRequestDto);
 
-    public  List<ProductModel> getProduct();
+    public List<ProductResponseDto> getProduct();
 
-    public ProductModel updatedProduct(int id, ProductModel productModel);
+    public ProductResponseDto updateProduct(int id, ProductRequestDto productDto);
 
     public boolean deleteProduct(int id);
 
