@@ -1,45 +1,65 @@
-
 package com.example.Custumer_Service.controllers;
 
 import com.example.Custumer_Service.Services.CustumerService;
 import com.example.Custumer_Service.dto.CustumerRequestDto;
 import com.example.Custumer_Service.dto.CustumerResponseDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.Custumer_Service.exceptions.CustumerNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/custumers")
+@RequestMapping("/custumers")
 @CrossOrigin(origins = "*")
 public class CustumerController {
 
-    @Autowired
-    private CustumerService custumerService;
+    private final CustumerService custumerService;
+
+    public CustumerController(CustumerService custumerService) {
+        this.custumerService = custumerService;
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<CustumerResponseDto> saveCustumer(@RequestBody CustumerRequestDto dto) {
+        CustumerResponseDto saved = custumerService.createCustumer(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
 
     @GetMapping
-    public List<CustumerResponseDto> getAllCustumers() {
-        return custumerService.getAllCustumers();
+    public ResponseEntity<List<CustumerResponseDto>> getAllCustumers() {
+        List<CustumerResponseDto> custumers = custumerService.getAllCustumers();
+        return ResponseEntity.ok(custumers);
     }
 
     @GetMapping("/{id}")
-    public Optional<CustumerResponseDto> getCustumerById(@PathVariable Long id) {
-        return Optional.ofNullable(custumerService.getCustumerById(id));
+    public ResponseEntity<CustumerResponseDto> getCustumerById(@PathVariable Long id) {
+        try {
+            CustumerResponseDto custumer = custumerService.getCustumerById(id);
+            return ResponseEntity.ok(custumer);
+        } catch (CustumerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
-    @PostMapping
-    public CustumerResponseDto createCustomer(@RequestBody CustumerRequestDto dto) {
-        return custumerService.createCustumer(dto);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CustumerResponseDto> updateCustumer(@PathVariable Long id,                                                              @RequestBody CustumerRequestDto dto) {
+        try {
+            CustumerResponseDto updated = custumerService.updateCustumer(id, dto);
+            return ResponseEntity.ok(updated);
+        } catch (CustumerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
-    @PutMapping("/{id}")
-    public CustumerResponseDto updateCustomer(@PathVariable Long id, @RequestBody CustumerRequestDto dto) {
-        return custumerService.updateCustumer(id, dto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteCustumer(@PathVariable Long id) {
-        custumerService.deleteCustumer(id);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Boolean> deleteCustumer(@PathVariable Long id) {
+        try {
+            custumerService.deleteCustumer(id);
+            return ResponseEntity.ok(true);
+        } catch (CustumerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        }
     }
 }
