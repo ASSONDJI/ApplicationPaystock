@@ -22,7 +22,7 @@ public class CartModel {
 
 
     @Column(name = "DATE_CREATION")
-    private Date dateCreation;;
+    private Date dateCreation;
 
 
 }

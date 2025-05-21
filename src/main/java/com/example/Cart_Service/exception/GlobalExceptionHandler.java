@@ -14,11 +14,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CartNotFoundException.class)
     public ResponseEntity<ErrorEntity> CartNotFoundException(CartNotFoundException exception){
-        ErrorEntity error=ErrorEntity.builder()
+        ErrorEntity error = ErrorEntity.builder()
                 .localDateTime(LocalDateTime.now())
                 .message(exception.getMessage())
                 .httpStatus(HttpStatus.NOT_FOUND.value())
                 .build();
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(error);
 
     }
