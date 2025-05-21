@@ -1,5 +1,9 @@
 package com.example.Product_Service.service.ImplService;
 
+import com.example.Product_Service.dto.ProductRequestDto;
+import com.example.Product_Service.dto.ProductResponseDto;
+import com.example.Product_Service.exception.ProductNotFoundException;
+import com.example.Product_Service.mapper.ProductMapper;
 import com.example.Product_Service.model.ProductModel;
 import com.example.Product_Service.repository.ProductRepository;
 import com.example.Product_Service.service.ProductService;
@@ -11,41 +15,58 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private  final ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductRepository productRepository1) {
-
-        this.productRepository = productRepository1;
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
-    @Override
-    public ProductModel saveProduct(ProductModel productModel) {
-        return this.productRepository.save(productModel);
-    }
 
     @Override
-    public List<ProductModel> getProduct() {
-        return this.productRepository.findAll();
-    }
-
-    @Override
-    public ProductModel updatedProduct(int id, ProductModel productModel) {
-        Optional<ProductModel> foundProduct = this.productRepository.findById(id);
-        if(id == productModel.getId_Product() && foundProduct.isPresent()){
-            return this.productRepository.save(productModel);
+    public ProductResponseDto saveProduct(ProductRequestDto productRequestDto) {
+        try {
+            ProductModel entity = productMapper.toEntity(productRequestDto);
+            ProductModel saved = productRepository.save(entity);
+            return ProductMapper.toDto(saved);
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
         }
-        return null;
+    }
+
+    @Override
+    public List<ProductResponseDto> getProduct() {
+        try {
+            List<ProductModel> product = this.productRepository.findAll();
+            return (List<ProductResponseDto>) product.stream()
+                    .map(ProductMapper::toDto)
+                    .toList();
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ProductResponseDto updateProduct(int id, ProductRequestDto productDto) {
+        Optional<ProductModel> foundProduct = this.productRepository.findById(id);
+        if (foundProduct.isPresent()){
+            ProductModel updateProduct = productMapper.toEntity(productDto);
+            updateProduct.setId(id);
+            ProductModel saveProduct = productRepository.save(updateProduct);
+            return ProductMapper.toDto(saveProduct);
+        }
+        throw new ProductNotFoundException(id);
     }
 
     @Override
     public boolean deleteProduct(int id) {
-
-        Optional<ProductModel> foundProduct=this.productRepository.findById(id);
-        if(foundProduct.isPresent()){
+        Optional<ProductModel> foundProduct = this.productRepository.findById(id);
+        if (foundProduct.isPresent()){
             ProductModel u = foundProduct.get();
-             this.productRepository.delete(u);
-             return true;
+            this.productRepository.delete(u);
+            return true;
         }
-        return false;
+        throw new ProductNotFoundException(id);
     }
 }

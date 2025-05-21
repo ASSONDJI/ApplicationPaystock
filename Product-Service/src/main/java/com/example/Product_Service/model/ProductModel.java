@@ -6,21 +6,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Setter
+@Getter
 @Entity
 @Table(name="PRODUCT")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 
 
 public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
-    private int id_Product;
+    private int id;
 
     @Column(name = "NAME")
     private String name;
@@ -32,20 +32,23 @@ public class ProductModel {
     private int purchasingprice;
 
     @Column(name = "UNITPRICE")
-    private String unitPrice;
+    private int unitPrice;
 
     @Column(name = "SELLINGPRICE")
-    private String sellingPrice;
+    private int sellingPrice;
 
     @Column(name = "QUANTITY")
-    private String quantity;
+    private int quantity;
 
-    public int getId_Product() {
-        return id_Product;
+    public ProductModel() {
     }
 
-    public void setId_Product(int id_Product) {
-        this.id_Product = id_Product;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -72,27 +75,27 @@ public class ProductModel {
         this.purchasingprice = purchasingprice;
     }
 
-    public String getUnitPrice() {
+    public int getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(String unitPrice) {
+    public void setUnitPrice(int unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public String getSellingPrice() {
+    public int getSellingPrice() {
         return sellingPrice;
     }
 
-    public void setSellingPrice(String sellingPrice) {
+    public void setSellingPrice(int sellingPrice) {
         this.sellingPrice = sellingPrice;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 }
