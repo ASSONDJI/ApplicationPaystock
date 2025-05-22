@@ -1,56 +1,75 @@
 package com.example.Order_Service.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "order_items")
 public class OrderItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "productId ne doit pas être nul")
-    private Long productId;
+    private Long productId; // Référence au produit du microservice Product
 
-    @NotBlank(message = "productName est obligatoire")
-    private String productName;
+    private String productName; // Pour affichage uniquement (non stocké si logique stricte)
 
-    @Min(value = 1, message = "La quantité doit être ≥ 1")
     private int quantity;
 
-    @Min(value = 0, message = "Le prix unitaire doit être ≥ 0")
     private double unitPrice;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id") // clé étrangère
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     private Order order;
 
-    // ✅ Getters et Setters
-    public Long getId() { return id; }
+    // Getters et Setters
+    public Long getId() {
+        return id;
+    }
 
-    public Long getProductId() { return productId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public void setProductId(Long productId) { this.productId = productId; }
+    public Long getProductId() {
+        return productId;
+    }
 
-    public String getProductName() { return productName; }
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
 
-    public void setProductName(String productName) { this.productName = productName; }
+    public String getProductName() {
+        return productName;
+    }
 
-    public int getQuantity() { return quantity; }
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public int getQuantity() {
+        return quantity;
+    }
 
-    public double getUnitPrice() { return unitPrice; }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
-    public void setUnitPrice(double unitPrice) { this.unitPrice = unitPrice; }
+    public double getUnitPrice() {
+        return unitPrice;
+    }
 
-    public Order getOrder() { return order; }
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
 
-    public void setOrder(Order order) { this.order = order; }
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
 }

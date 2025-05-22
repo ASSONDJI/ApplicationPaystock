@@ -1,10 +1,11 @@
-package com.example.Order_Service.dto;
+package com.example.Order_Service.dto.order;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class OrderItemCreateDTO {
+
     @NotNull(message = "L'ID du produit est requis")
     private Long productId;
 
@@ -25,20 +26,20 @@ public class OrderItemCreateDTO {
         this.productId = productId;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getProductName() {
         return productName;
     }
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public double getUnitPrice() {
@@ -48,5 +49,4 @@ public class OrderItemCreateDTO {
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
-// Getters & Setters
 }

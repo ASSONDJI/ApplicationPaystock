@@ -2,82 +2,88 @@ package com.example.Order_Service.models;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "orders")
 public class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Le nom du client est obligatoire")
-    private String clientName;
-    @NotNull(message = "La date de commande est obligatoire")
+    private Long customerId; // Référence vers Customer-Service
+
+    private Long billId; // Référence vers Bill-Service (générée après création de commande)
+
     private LocalDate orderDate;
 
     private double totalPrice;
 
-    @NotBlank(message = "Le statut est requis")
-    private String status; // EN_COURS, PAYÉ, ANNULÉ
+    private String status;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> items = new ArrayList<>();
+
+    // Getters et Setters
+
+    public Long getBillId() {
+        return billId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
 
 
-    @Valid
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<OrderItem> items;
 
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
 
-    public Order() {}
-
-    public Order(String clientName, LocalDate orderDate, double totalPrice, String status) {
-        this.clientName = clientName;
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    // Getters & Setters
-    public Long getId() { return id; }
-
-    public String getClientName() { return clientName; }
-
-    public void setClientName(String clientName) { this.clientName = clientName; }
-
-    public LocalDate getOrderDate() { return orderDate; }
-
-    public void setOrderDate(LocalDate orderDate) { this.orderDate = orderDate; }
-
-    public double getTotalPrice() { return totalPrice; }
-
-    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
-
-    public String getStatus() { return status; }
-
-    public void setStatus(String status) { this.status = status; }
-
-    public List<OrderItem> getItems() { return items; }
-
-    public void setItems(List<OrderItem> items) {
-        this.items = new ArrayList<>();
-        double total = 0.0;
-
-        for (OrderItem item : items) {
-            item.setOrder(this); // Rattache chaque item à la commande
-            this.items.add(item);
-            total += item.getUnitPrice() * item.getQuantity(); // Calcule le sous-total
-        }
-
-        this.totalPrice = total; // Affectation automatique du total
+    public List<OrderItem> getItems() {
+        return items;
     }
 
-
-
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
 }
