@@ -1,19 +1,22 @@
 package com.example.Order_Service.controllers;
 
-import com.example.Order_Service.dto.OrderDTO;
-import com.example.Order_Service.mappers.OrderMapper;
-import com.example.Order_Service.models.Order;
+import com.example.Order_Service.dto.item.OrderResponseDTO;
+import com.example.Order_Service.dto.order.OrderCreateDTO;
 import com.example.Order_Service.services.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+/**
+ * 🎯 Contrôleur principal pour gérer les opérations sur les commandes.
+ * Les données enrichies proviennent de Customer-Service, Product-Service et Bill-Service.
+ */
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "*") // Pour permettre les appels CORS (frontend)
+@CrossOrigin(origins = "*") // Pour permettre les appels depuis Angular ou autres clients
 public class OrderController {
 
     private final OrderService orderService;
@@ -22,43 +25,59 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // ✅ Obtenir toutes les commandes
-    @GetMapping
-    public ResponseEntity<List<OrderDTO>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
-        List<OrderDTO> dtos = orders.stream()
-                .map(OrderMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
-    }
-
-    // ✅ Obtenir une commande par ID
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
-        Order order = orderService.getOrderById(id);
-        return ResponseEntity.ok(OrderMapper.toDTO(order));
-    }
-
-    // ✅ Créer une commande
+    /**
+     * ✅ Créer une commande.
+     * Appelle en cascade les services externes :
+     * - CustomerService pour vérifier le client
+     * - ProductService pour valider les produits
+     * - BillService pour générer la facture
+     */
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody @Valid OrderDTO dto) {
-        Order order = OrderMapper.toEntity(dto); // ⬅️ conversion DTO ➜ Entity
-        Order created = orderService.createOrder(order);
-        return ResponseEntity.ok(OrderMapper.toDTO(created));
+    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderCreateDTO dto) {
+        return ResponseEntity.ok(orderService.createOrder(dto));
     }
 
-    // ✅ Modifier une commande
-    @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @Valid @RequestBody OrderDTO dto) {
-        Order order = OrderMapper.toEntity(dto); // ⬅️ conversion DTO ➜ Entity
-        Order updated = orderService.updateOrder(id, order);
-        return ResponseEntity.ok(OrderMapper.toDTO(updated));
+    /**
+     * ✅ Obtenir les détails complets d’une commande par son ID :
+     * - Informations du client
+     * - Produits commandés
+     * - Montant total
+     * - Identifiant de la facture
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
-    // ✅ Supprimer une commande
+    /**
+     * ✅ Obtenir la liste de toutes les commandes existantes,
+     * enrichies avec les informations liées.
+     */
+    @GetMapping
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    /**
+     * ✅ Supprimer une commande de la base.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * ✅ Modifier une commande existante :
+     * - Valide les données d’entrée
+     * - Met à jour les produits, le statut, etc.
+     * - Met à jour la facture si nécessaire
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderResponseDTO> updateOrder(
+            @PathVariable Long id,
+            @Valid @RequestBody OrderCreateDTO dto) {
+        OrderResponseDTO updatedOrder = orderService.updateOrder(id, dto);
+        return ResponseEntity.ok(updatedOrder);
     }
 }
